@@ -1,28 +1,35 @@
 'use strict';
 
 const express = require('express');
-const authRouter = express.Router();
+const router = express.Router();
 
-const User = require('./users-model.js');
-const auth = require('./middleware.js');
+const Users = require('./models/users-model.js');
+const basicAuth = require('./middleware/basic.js');
+const oauth = require('./middleware/oauth.js');
 
-authRouter.post('/signup', (req, res, next) => {
-  let user = new User(req.body);
-  user
-    .save()
-    .then((user) => {
-      req.token = user.generateToken();
-      req.user = user;
-      res.set('token', req.token);
-      res.cookie('auth', req.token);
-      res.send(req.token);
-    })
-    .catch(next);
+router.post('/signup', (req, res) => {
+  let newUser = new Users(req.body);
+  newUser.save()
+    .then(user => {
+      let token = newUser.tokenGenerator(user);
+      res.status(200).send(token);
+    }).catch((err) => res.status(403).send(err.message));
+});
+  
+router.post('/signin', basicAuth, (req, res) => {
+  console.log(req.token ,'isSignin');
+  res.status(200).send(req.token);
+});
+  
+router.get('/users',(req, res) => {
+  Users.list()
+    .then(users=>{
+      res.status(200).json(users);
+    });
 });
 
-authRouter.get('/signin', auth, (req, res, next) => {
-  res.cookie('auth', req.token);
-  res.send(req.token);
+router.get('/oauth', oauth, (req, res) => {
+  res.status(200).send(req.token);
 });
 
-module.exports = authRouter;
+module.exports = router;
