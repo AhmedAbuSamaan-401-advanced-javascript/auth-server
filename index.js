@@ -1,14 +1,8 @@
 'use strict';
-
-require('dotenv').config();
-
-// Start up DB Server
+const dotenv = require('dotenv');
+dotenv.config();
+const server = require('./src/server.js');
 const mongoose = require('mongoose');
-const options = {
-  useNewUrlParser:true,
-  useCreateIndex: true,
-};
-mongoose.connect(process.env.MONGODB_URI, options);
-
-// Start the web server
-require('./src/app.js').start(process.env.PORT);
+const MONGOOSE_URI=process.env.MONGOOSE_URI || 'mongodb://localhost:27017/serverVir';
+mongoose.connect(MONGOOSE_URI, { useNewUrlParser: true, useCreateIndex:true,useUnifiedTopology:true });
+server.start();
