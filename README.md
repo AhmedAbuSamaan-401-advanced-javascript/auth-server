@@ -3,7 +3,7 @@
 ### Author: Ahmed Abu Samaan
 
 ### Resources
-[PR](https://github.com/AhmedAbuSamaan-401-advanced-javascript/auth-server/pull/2)
+[PR](https://github.com/AhmedAbuSamaan-401-advanced-javascript/auth-server/pull/3)
 
 ### Setup (.env):-
 .env =>
